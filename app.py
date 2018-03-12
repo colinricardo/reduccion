@@ -11,6 +11,7 @@ def index():
     try:
       content = markdown(url)
     except Exception as e:
+      print('ERROR --> ', e)
       return 'An error occurred with parser', 502
 
     if content:

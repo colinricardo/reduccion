@@ -1,44 +1,29 @@
 import os
 
 from os.path import join, dirname
-from parser import ParserAPI
+from diffbot import DiffbotAPI
 import html2text
 from dotenv import load_dotenv
 
 dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path);
+load_dotenv(dotenv_path)
 
-mercury = ParserAPI(api_key=os.environ.get('MERCURY_API_KEY'))
+diff = DiffbotAPI(os.environ.get('DIFFBOT_TOKEN'))
 
 h = html2text.HTML2Text()
 
 h.body_width = 0 # to avoid cutting off links
 
-def process(md):
-  lines = md.split('\n')
-  firstLine = lines[0]
-  headerLine = lines[2]
-  firstLineAfterHeader = lines[4]
-  newMd = ''
-  if '![' in firstLine and '![' in firstLineAfterHeader:
-    return '\n'.join(lines[2:])
-  return md
-
-
-def convert(html, lead_image_url=None, title=None):
-  header = ''
+def convert(html, title=None):
   if title:
-    if lead_image_url:
-        header = '![header]({})<br><br>'.format(lead_image_url)
     title = '# {}'.format(title)
-    html = '\n\n'.join([header, title, html])
-
-  return process(h.handle(html))
+    html = '<br>\n\n'.join([title, html])
+  return h.handle(html)
 
 def markdown(url):
   try:
-    d = mercury.parse(url)
-    return convert(d.content, lead_image_url=d.lead_image_url, title=d.title)
+    d = diff.parse(url)
+    return convert(d.html, title=d.title)
   except KeyError:
     raise Exception
     return None

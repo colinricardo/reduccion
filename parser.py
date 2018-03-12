@@ -10,7 +10,6 @@ load_dotenv(dotenv_path);
 
 MERCURY_API = os.environ.get('MERCURY_API')
 
-
 class ParsedArticle(object):
     """docstring for ParsedArticle"""
     def __init__(self, parser):
