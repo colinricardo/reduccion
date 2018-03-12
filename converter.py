@@ -14,6 +14,17 @@ h = html2text.HTML2Text()
 
 h.body_width = 0 # to avoid cutting off links
 
+def process(md):
+  lines = md.split('\n')
+  firstLine = lines[0]
+  headerLine = lines[2]
+  firstLineAfterHeader = lines[4]
+  newMd = ''
+  if '![' in firstLine and '![' in firstLineAfterHeader:
+    return '\n'.join(lines[2:])
+  return md
+
+
 def convert(html, lead_image_url=None, title=None):
   header = ''
   if title:
@@ -22,7 +33,7 @@ def convert(html, lead_image_url=None, title=None):
     title = '# {}'.format(title)
     html = '\n\n'.join([header, title, html])
 
-  return h.handle(html)
+  return process(h.handle(html))
 
 def markdown(url):
   try:
