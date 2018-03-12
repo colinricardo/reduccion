@@ -29,4 +29,5 @@ def markdown(url):
     d = mercury.parse(url)
     return convert(d.content, lead_image_url=d.lead_image_url, title=d.title)
   except KeyError:
+    raise Exception
     return None
