@@ -1,17 +1,12 @@
-import os
 import requests
 import maya
 
-from os.path import join, dirname
-from dotenv import load_dotenv
+MERCURY_API = 'https://mercury.postlight.com/parser?url='
 
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path);
-
-MERCURY_API = os.environ.get('MERCURY_API')
 
 class ParsedArticle(object):
     """docstring for ParsedArticle"""
+
     def __init__(self, parser):
         super(ParsedArticle, self).__init__()
         self._parser = parser
@@ -45,7 +40,8 @@ class ParsedArticle(object):
 
         # Proper Datetimes.
         if p.date_published:
-            p.date_published = maya.MayaDT.from_iso8601(p.date_published).datetime()
+            p.date_published = maya.MayaDT.from_iso8601(
+                p.date_published).datetime()
 
         return p
 
