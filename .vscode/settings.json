@@ -1,3 +1,4 @@
 {
-  "python.pythonPath": "/Users/colinricardo/.local/share/virtualenvs/diffbot-parser-ftYwZoXJ/bin/python"
+  "python.pythonPath": "/usr/local/bin/python3",
+  "python.linting.enabled": false
 }

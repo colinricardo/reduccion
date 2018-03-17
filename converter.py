@@ -1,10 +1,8 @@
-# TODO: use mercury for paid medium articles
-
 import os
 import html2text
 from os.path import join, dirname
-from article_parser import ArticleAPI
-from parser import ParserAPI
+from diffparser import ArticleAPI
+from mercuryparser import ParserAPI
 from dotenv import load_dotenv
 
 dotenv_path = join(dirname(__file__), '.env')
@@ -42,6 +40,7 @@ def convert(html, title=None):
 def markdown(url):
     try:
         d = diff.parse(url)
+        print(d)
 
         if not d.html:
             d = mercury.parse(url)
@@ -49,5 +48,6 @@ def markdown(url):
         else:
             html = d.html
         return convert(html, title=d.title)
-    except KeyError:
+    except KeyError as e:
+        print(e)
         raise Exception
