@@ -39,7 +39,7 @@ class Article:
 
     @classmethod
     def from_dict(clss, d, parser):
-        print('diff json -->', d)
+        # print('diff json -->', d)
         p = clss(parser=parser)
 
         objects = d['objects'][0]

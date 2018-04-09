@@ -1,52 +1,41 @@
 import os
+import re
 import html2text
 from os.path import join, dirname
-from diffparser import ArticleAPI
-from mercuryparser import ParserAPI
 from dotenv import load_dotenv
+
+from extractparser import ExtractAPI
+from mercuryparser import ParserAPI
+from markdown import fixImages
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-diff = ArticleAPI(token=os.environ.get('DIFFBOT_TOKEN'))
+ex = ExtractAPI(token=os.environ.get('EXTRACT_KEY'))
 mercury = ParserAPI(api_key=os.environ.get('MERCURY_API_KEY'))
 
 h = html2text.HTML2Text()
-
-h.body_width = 0  # to avoid cutting off links
-
-
-def removeDoubleTitles(md):
-    lines = md.split('\n')
-
-    fourth = lines[3]
-    if fourth.startswith('#'):
-        return '\n'.join(lines[2:])
-    return md
-
-
-def process(md):
-    return removeDoubleTitles(md)
+h.body_width = 0
+h.protect_links = True
+h.mark_code = True
 
 
 def convert(html, title=None):
-    print(title)
     if title:
         title = '# {}'.format(title)
-        html = '<br>\n\n'.join([title, html])
-    return process(h.handle(html))
+
+    markdown = h.handle(html)
+    return fixImages(markdown)
 
 
 def markdown(url):
     try:
-        d = diff.parse(url)
-        print(d)
+        d = mercury.parse(url)
 
-        if not d.html:
-            d = mercury.parse(url)
-            html = d.content
-        else:
-            html = d.html
+        if not d.content:
+            d = ex.parse(url)
+
+        html = d.content
         return convert(html, title=d.title)
     except KeyError as e:
         print(e)
