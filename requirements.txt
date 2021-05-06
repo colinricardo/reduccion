@@ -8,7 +8,7 @@ diffbot-api==0.1.2
 feedfinder2==0.0.4
 feedparser==5.2.1
 Flask==0.12.2
-Flask-Cors==3.0.3
+Flask-Cors==3.0.9
 gunicorn==19.7.1
 html2text==2018.1.9
 humanize==0.5.1
